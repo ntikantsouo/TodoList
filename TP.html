@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+</head>
+<style>
+    /* RESET */
+    
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+    /* BODY */
+    
+    body {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+        height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+    /* CONTAINER */
+    
+    .box {
+        background: rgba(255, 255, 255, 0.08);
+        backdrop-filter: blur(15px);
+        padding: 25px;
+        border-radius: 20px;
+        width: 380px;
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+        color: white;
+    }
+    /* TITRES */
+    
+    h2,
+    h4 {
+        text-align: center;
+        margin-bottom: 10px;
+    }
+    /* INPUTS */
+    
+    input,
+    textarea {
+        width: 100%;
+        padding: 12px;
+        margin: 8px 0;
+        border-radius: 10px;
+        border: none;
+        outline: none;
+        font-size: 14px;
+        background: rgba(255, 255, 255, 0.15);
+        color: white;
+    }
+    
+    input::placeholder,
+    textarea::placeholder {
+        color: #ddd;
+    }
+    
+    input:focus,
+    textarea:focus {
+        background: rgba(255, 255, 255, 0.25);
+    }
+    /* BUTTONS */
+    
+    button {
+        width: 100%;
+        padding: 12px;
+        border-radius: 10px;
+        border: none;
+        margin-top: 8px;
+        cursor: pointer;
+        font-weight: bold;
+        transition: 0.3s;
+    }
+    /* BOUTONS STYLE */
+    
+    .reg-btn {
+        background: linear-gradient(45deg, #00c853, #69f0ae);
+        color: black;
+    }
+    
+    .log-btn {
+        background: linear-gradient(45deg, #2979ff, #82b1ff);
+        color: white;
+    }
+    
+    .add-btn {
+        background: linear-gradient(45deg, #00bcd4, #84ffff);
+        color: black;
+    }
+    /* PETITS BOUTONS */
+    
+    .status-btn {
+        background: #00c853;
+        color: white;
+        padding: 6px 10px;
+        margin-right: 5px;
+        border-radius: 6px;
+    }
+    
+    .delete-btn {
+        background: #ff1744;
+        color: white;
+        padding: 6px 10px;
+        border-radius: 6px;
+    }
+    /* HOVER */
+    
+    button:hover {
+        transform: scale(1.05);
+        opacity: 0.9;
+    }
+    /* MESSAGE */
+    
+    #msg {
+        margin-top: 12px;
+        text-align: center;
+        font-weight: bold;
+    }
+    /* TASK LIST */
+    
+    #tasks-list {
+        margin-top: 10px;
+        max-height: 200px;
+        overflow-y: auto;
+    }
+    /* TASK ITEM */
+    
+    .task-item {
+        background: rgba(255, 255, 255, 0.1);
+        margin-top: 10px;
+        padding: 12px;
+        border-radius: 12px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        transition: 0.3s;
+    }
+    
+    .task-item:hover {
+        background: rgba(255, 255, 255, 0.2);
+    }
+    /* TASK INFO */
+    
+    .task-info {
+        max-width: 70%;
+        font-size: 14px;
+    }
+    /* DONE TASK */
+    
+    .task-done {
+        text-decoration: line-through;
+        color: #aaa;
+    }
+    /* SCROLLBAR */
+    
+    #tasks-list::-webkit-scrollbar {
+        width: 6px;
+    }
+    
+    #tasks-list::-webkit-scrollbar-thumb {
+        background: #888;
+        border-radius: 10px;
+    }
+    /* HR */
+    
+    hr {
+        margin: 10px 0;
+        border: 0.5px solid rgba(255, 255, 255, 0.2);
+    }
+    /* HIDDEN */
+    
+    .hidden {
+        display: none;
+    }
+    /* RESPONSIVE */
+    
+    @media (max-width: 450px) {
+        .box {
+            width: 90%;
+            padding: 20px;
+        }
+    }
+</style>
+
+<body>
+    <div class="box">
+        <div id="auth-ui">
+            <h2>Connexion/inscription</h2><input type="text" id="reg-name" placeholder="Nom"><input type="email" id="reg-email" placeholder="Email"><input type="password" id="reg-pass" placeholder="Mot de passe"><button class="reg-btn" onclick="handleRegister()">S'inscrire</button>
+            <button class="log-btn" onclick="handleLogin()">Se connecter</button></div>
+        <div id="todo-ui" class="hidden">
+            <h2 id="user-greeting"></h2>
+            <hr>
+            <h4>Nouvelle Tâche</h4><input type="text" id="task-title" placeholder="Titre"><textarea id="task-desc" placeholder="Description"></textarea><button class="add-btn" onclick="addTask()">Ajouter la tâche</button>
+            <h4>Mes Tâches</h4>
+            <div id="tasks-list"></div><button class="log-btn" style="margin-top: 20px; background-color: #6c757d;" onclick="handleLogout()">Se déconnecter</button></div>
+        <p id="msg"></p>
+    </div>
+    <script>
+        const authUi = document.getElementById('auth-ui');
+        const todoUi = document.getElementById('todo-ui');
+        const msg = document.getElementById('msg');
+        let currentUser = null;
+
+        function handleRegister() {
+            const name = document.getElementById('reg-name').value.trim();
+            const email = document.getElementById('reg-email').value.trim();
+            const pass = document.getElementById('reg-pass').value;
+            if (!name || !email || !pass) {
+                updateMsg("Remplissez tout !", "red");
+                return;
+            }
+            let users = JSON.parse(localStorage.getItem('users')) || [];
+            if (users.find(u => u.email === email)) {
+                updateMsg("Email déjà pris !", "red");
+                return;
+            }
+            users.push({
+                name,
+                email,
+                pass
+            });
+            localStorage.setItem('users', JSON.stringify(users));
+            updateMsg("Inscrit ! Connectez-vous.", "green");
+        }
+
+        function handleLogin() {
+            const email = document.getElementById('reg-email').value.trim();
+            const pass = document.getElementById('reg-pass').value;
+            const users = JSON.parse(localStorage.getItem('users')) || [];
+            const user = users.find(u => u.email === email && u.pass === pass);
+            if (user) {
+                localStorage.setItem('currentUser', JSON.stringify(user));
+                currentUser = user;
+                renderApp();
+            } else {
+                updateMsg("Email ou mot de passe faux.", "red");
+            }
+        }
+
+        function addTask() {
+            const title = document.getElementById('task-title').value.trim();
+            const desc = document.getElementById('task-desc').value.trim();
+            if (!title) return;
+            const tasks = JSON.parse(localStorage.getItem('tasks')) || [];
+            const newTask = {
+                id: Date.now(),
+                title: title,
+                description: desc,
+                status: "non faite",
+                date: new Date().toLocaleDateString(),
+                owner: currentUser.email
+            };
+            tasks.push(newTask);
+            localStorage.setItem('tasks', JSON.stringify(tasks));
+            document.getElementById('task-title').value = "";
+            document.getElementById('task-desc').value = "";
+            displayTasks();
+        }
+
+        function displayTasks() {
+            const tasksList = document.getElementById('tasks-list');
+            const allTasks = JSON.parse(localStorage.getItem('tasks')) || [];
+            const userTasks = allTasks.filter(t => t.owner === currentUser.email);
+            tasksList.innerHTML = "";
+            userTasks.forEach(task => {
+                const div = document.createElement('div');
+                div.className = "task-item";
+                div.innerHTML = ` <div class="task-info ${task.status === 'faite' ? 'task-done' : ''}"> <strong>$ {
+                task.title
+            }
+            </strong> ($ {
+                task.date
+            }
+            )<br> <small>$ {
+                task.description
+            }
+            </small> </div> <div> <button class="status-btn" onclick="toggleTask(${task.id})">✓</button> <button class="delete-btn" onclick="deleteTask(${task.id})">X</button> </div> `;
+                tasksList.appendChild(div);
+            });
+        }
+
+        function toggleTask(id) {
+            let tasks = JSON.parse(localStorage.getItem('tasks'));
+            tasks = tasks.map(t => {
+                if (t.id === id) t.status = (t.status === "faite" ? "non faite" : "faite");
+                return t;
+            });
+            localStorage.setItem('tasks', JSON.stringify(tasks));
+            displayTasks();
+        }
+
+        function deleteTask(id) {
+            let tasks = JSON.parse(localStorage.getItem('tasks'));
+            tasks = tasks.filter(t => t.id !== id);
+            localStorage.setItem('tasks', JSON.stringify(tasks));
+            displayTasks();
+        }
+
+        function renderApp() {
+            authUi.classList.add('hidden');
+            todoUi.classList.remove('hidden');
+            document.getElementById('user-greeting').textContent = "Bonjour " + currentUser.name;
+            msg.textContent = "";
+            displayTasks();
+        }
+
+        function handleLogout() {
+            localStorage.removeItem('currentUser');
+            location.reload();
+        }
+
+        function updateMsg(text, color) {
+            msg.textContent = text;
+            msg.style.color = color;
+        }
+
+        window.onload = () => {
+            const activeUser = JSON.parse(localStorage.getItem('currentUser'));
+            if (activeUser) {
+                currentUser = activeUser;
+                renderApp();
+            }
+        }
+
+        ;
+    </script>
+</body>
+
+</html>

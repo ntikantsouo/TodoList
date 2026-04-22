@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f4f4f4;
+            padding: 20px;
+        }
+        
+        h1 {
+            text-align: center;
+        }
+        
+        .add-zone {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        
+        input,
+        button {
+            padding: 8px;
+            margin: 5px;
+        }
+        
+        ul {
+            list-style: none;
+            padding: 0;
+            max-width: 600px;
+            margin: auto;
+        }
+        
+        li {
+            background: white;
+            margin: 10px 0;
+            padding: 10px;
+            border-radius: 5px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        li.done {
+            text-decoration: line-through;
+            background: #c8f7c5;
+        }
+        
+        li.urgent {
+            border-left: 5px solid red;
+        }
+        
+        .actions button {
+            margin-left: 5px;
+            cursor: pointer;
+        }
+        
+        #counter {
+            text-align: center;
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Todo List - TP2</h1>
+
+    <div class="add-zone">
+        <input type="text" id="taskName">
+        <input type="text" id="taskExtra">
+        <br>
+        <button onclick="addTask()">Ajouter</button>
+    </div>
+
+    <p id="counter">Nombre total de tâches : 0</p>
+
+    <ul id="taskList"></ul>
+    <script src="page.js"></script>
+</body>
+
+</html>

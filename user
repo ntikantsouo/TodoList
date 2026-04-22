@@ -1,0 +1,253 @@
+# 📋 User Stories — Système de Gestion des Demandes de Composants
+
+---
+
+## 🎯 Vue d'ensemble du système
+
+Le système permet à des étudiants/utilisateurs de soumettre des demandes de composants matériels, qui sont ensuite validées par un encadrant, puis transmises au laboratoire ou à l'administration selon la disponibilité des matériaux.
+
+---
+
+## 👤 Rôles et acteurs
+
+| Rôle | Description |
+|------|-------------|
+| **Étudiant / Utilisateur** | Soumet des demandes de composants pour ses projets |
+| **Encadrant** | Valide ou rejette les demandes de son groupe |
+| **Laboratoire** | Fournit les composants disponibles en stock |
+| **Administrateur** | Gère les groupes, les encadrants et les demandes escaladées |
+
+---
+
+## 👨‍🎓 Étudiant / Utilisateur
+
+### US-01 — Soumettre une demande de composants
+> **En tant qu'** étudiant,  
+> **Je veux** pouvoir soumettre une demande de composants en précisant la référence, la quantité, le motif et le projet associé,  
+> **Afin de** fournir à mon encadrant toutes les informations nécessaires pour évaluer ma demande.
+
+**Critères d'acceptation :**
+- [ ] Le formulaire contient : nom du composant, référence, quantité, description du besoin, projet associé.
+- [ ] La demande est automatiquement associée au groupe de l'étudiant.
+- [ ] L'étudiant reçoit une confirmation de soumission (email ou notification in-app).
+- [ ] L'étudiant ne peut pas soumettre une demande incomplète (champs obligatoires validés).
+
+---
+
+### US-02 — Suivre l'état de ses demandes
+> **En tant qu'** étudiant,  
+> **Je veux** consulter l'historique et l'état en temps réel de mes demandes,  
+> **Afin de** savoir à quelle étape se trouve chaque demande (en attente, validée, rejetée, transmise au labo, fournie).
+
+**Critères d'acceptation :**
+- [ ] Tableau de bord listant toutes mes demandes avec leur statut actuel.
+- [ ] Les statuts possibles sont : `Soumise`, `En révision`, `Validée`, `Rejetée`, `Transmise au laboratoire`, `Transmise à l'administration`, `Matériel fourni`.
+- [ ] L'étudiant reçoit une notification à chaque changement de statut.
+- [ ] En cas de rejet, le motif est visible dans le détail de la demande.
+
+---
+
+### US-03 — Modifier ou annuler une demande en attente
+> **En tant qu'** étudiant,  
+> **Je veux** pouvoir modifier ou annuler une demande tant qu'elle n'a pas encore été traitée par l'encadrant,  
+> **Afin de** corriger une erreur sans avoir à créer une nouvelle demande.
+
+**Critères d'acceptation :**
+- [ ] La modification est possible uniquement si le statut est `Soumise`.
+- [ ] Une demande à l'état `En révision` ou au-delà ne peut plus être modifiée.
+- [ ] L'annulation déclenche une notification à l'encadrant.
+
+---
+
+## 👨‍🏫 Encadrant
+
+### US-04 — Consulter les demandes de son groupe
+> **En tant qu'** encadrant,  
+> **Je veux** voir uniquement les demandes soumises par les étudiants de mes groupes,  
+> **Afin de** gérer efficacement mon périmètre sans être distrait par les demandes des autres groupes.
+
+**Critères d'acceptation :**
+- [ ] Le tableau de bord filtre automatiquement les demandes par groupe assigné à l'encadrant.
+- [ ] Un encadrant assigné à plusieurs groupes voit les demandes de tous ses groupes.
+- [ ] Les demandes des groupes dont il n'est pas responsable sont totalement masquées.
+- [ ] Tri et filtrage disponibles par date, statut, étudiant ou projet.
+
+---
+
+### US-05 — Valider ou rejeter une demande
+> **En tant qu'** encadrant,  
+> **Je veux** pouvoir examiner le détail d'une demande et décider de la valider ou de la rejeter avec un commentaire,  
+> **Afin de** m'assurer que les composants demandés sont justifiés et cohérents avec le projet de l'étudiant.
+
+**Critères d'acceptation :**
+- [ ] L'encadrant peut accéder à tous les détails de la demande (composant, quantité, motif, projet).
+- [ ] En cas de validation, la demande passe à l'état `Validée` et est transmise au laboratoire.
+- [ ] En cas de rejet, l'encadrant doit obligatoirement saisir un motif de refus.
+- [ ] L'étudiant est notifié immédiatement de la décision.
+
+---
+
+### US-06 — Transmettre une demande validée au laboratoire
+> **En tant qu'** encadrant,  
+> **Je veux** qu'une demande validée soit automatiquement transmise au laboratoire,  
+> **Afin que** le laboratoire puisse vérifier la disponibilité des composants et les fournir dans les meilleurs délais.
+
+**Critères d'acceptation :**
+- [ ] À la validation, la demande est automatiquement envoyée au laboratoire sans action supplémentaire de l'encadrant.
+- [ ] Le laboratoire reçoit une notification avec les détails de la demande.
+- [ ] Le statut de la demande passe à `Transmise au laboratoire`.
+
+---
+
+### US-07 — Consulter l'historique des demandes traitées
+> **En tant qu'** encadrant,  
+> **Je veux** accéder à l'historique complet des demandes de mes groupes, qu'elles soient en cours ou archivées,  
+> **Afin de** suivre l'évolution des besoins matériels et éviter les doublons.
+
+**Critères d'acceptation :**
+- [ ] L'historique affiche toutes les demandes passées avec leur statut final.
+- [ ] Filtres disponibles : par période, par étudiant, par statut, par type de composant.
+- [ ] Export possible en CSV ou PDF.
+
+---
+
+## 🔬 Laboratoire
+
+### US-08 — Recevoir et traiter les demandes validées
+> **En tant que** responsable du laboratoire,  
+> **Je veux** recevoir automatiquement les demandes validées par les encadrants,  
+> **Afin de** vérifier la disponibilité des composants en stock et préparer la fourniture.
+
+**Critères d'acceptation :**
+- [ ] Tableau de bord dédié listant toutes les demandes transmises au laboratoire.
+- [ ] Chaque demande affiche : composant, quantité, étudiant, groupe, encadrant valideur.
+- [ ] Le laboratoire peut marquer une demande comme `Matériel fourni` après remise physique.
+- [ ] Le laboratoire est notifié en temps réel pour chaque nouvelle demande reçue.
+
+---
+
+### US-09 — Signaler un composant indisponible et escalader à l'administration
+> **En tant que** responsable du laboratoire,  
+> **Je veux** signaler qu'un composant est indisponible en stock et transmettre la demande à l'administration,  
+> **Afin que** l'administration puisse procéder à l'acquisition du matériel manquant.
+
+**Critères d'acceptation :**
+- [ ] Le laboratoire peut indiquer pour chaque ligne de demande : `Disponible` ou `Indisponible`.
+- [ ] Pour les composants indisponibles, la demande est escaladée à l'administration avec un commentaire expliquant la raison (rupture de stock, composant non référencé, etc.).
+- [ ] Le statut passe à `Transmise à l'administration`.
+- [ ] L'encadrant et l'étudiant sont notifiés de l'escalade.
+
+---
+
+## 🛠️ Administrateur
+
+### US-10 — Créer et gérer des groupes
+> **En tant qu'** administrateur,  
+> **Je veux** pouvoir créer, modifier et supprimer des groupes d'étudiants,  
+> **Afin d'** organiser les demandes par promotion, filière ou projet.
+
+**Critères d'acceptation :**
+- [ ] L'administrateur peut créer un groupe en lui donnant un nom, une description et une année/période.
+- [ ] Il peut ajouter ou retirer des étudiants d'un groupe.
+- [ ] Un groupe peut être désactivé (archivé) sans être supprimé pour conserver l'historique.
+- [ ] La suppression d'un groupe est bloquée s'il contient des demandes actives.
+
+---
+
+### US-11 — Assigner des encadrants à des groupes
+> **En tant qu'** administrateur,  
+> **Je veux** assigner un ou plusieurs encadrants à un groupe,  
+> **Afin de** définir clairement qui est responsable de la validation des demandes de chaque groupe.
+
+**Critères d'acceptation :**
+- [ ] Un groupe peut avoir plusieurs encadrants.
+- [ ] Un encadrant peut être responsable de plusieurs groupes.
+- [ ] L'encadrant reçoit une notification lors de son assignation à un nouveau groupe.
+- [ ] La désassignation d'un encadrant ne supprime pas les demandes déjà traitées par lui.
+
+---
+
+### US-12 — Gérer les comptes utilisateurs
+> **En tant qu'** administrateur,  
+> **Je veux** créer, modifier et désactiver les comptes des utilisateurs (étudiants, encadrants, personnel du laboratoire),  
+> **Afin de** contrôler les accès et maintenir la sécurité du système.
+
+**Critères d'acceptation :**
+- [ ] L'administrateur peut créer un compte avec un rôle défini : `Étudiant`, `Encadrant`, `Laboratoire`, `Administrateur`.
+- [ ] Un compte désactivé ne peut plus se connecter mais ses données sont conservées.
+- [ ] L'administrateur peut réinitialiser le mot de passe d'un utilisateur.
+- [ ] Un journal d'activité (logs) est accessible pour chaque compte.
+
+---
+
+### US-13 — Traiter les demandes escaladées (matériel indisponible)
+> **En tant qu'** administrateur,  
+> **Je veux** recevoir et gérer les demandes de composants indisponibles transmises par le laboratoire,  
+> **Afin de** lancer les procédures d'acquisition ou de trouver une alternative.
+
+**Critères d'acceptation :**
+- [ ] Tableau de bord dédié listant les demandes escaladées avec leur contexte complet.
+- [ ] L'administrateur peut choisir : lancer un bon de commande, proposer un composant alternatif, ou rejeter la demande avec justification.
+- [ ] L'étudiant, l'encadrant et le laboratoire sont notifiés de la décision.
+- [ ] Le statut final peut être : `Commande lancée`, `Alternative proposée`, `Rejetée par l'administration`.
+
+---
+
+### US-14 — Consulter les tableaux de bord et statistiques
+> **En tant qu'** administrateur,  
+> **Je veux** accéder à des rapports et des statistiques sur les demandes (volume, taux de validation, délais, composants les plus demandés),  
+> **Afin de** prendre des décisions éclairées sur la gestion du stock et les besoins des groupes.
+
+**Critères d'acceptation :**
+- [ ] Indicateurs clés : nombre de demandes par période, taux de validation/rejet, délai moyen de traitement.
+- [ ] Visualisation graphique (camemberts, histogrammes).
+- [ ] Filtres par groupe, encadrant, période, type de composant.
+- [ ] Export des rapports en PDF ou Excel.
+
+---
+
+## 🔄 Flux général des demandes
+
+```
+[Étudiant]
+    │
+    ▼ Soumet une demande (US-01)
+[Encadrant]
+    │
+    ├─ Rejette → [Étudiant notifié] (US-05)
+    │
+    └─ Valide → Transmis automatiquement (US-06)
+                    │
+                [Laboratoire]
+                    │
+                    ├─ Disponible → Matériel fourni (US-08)
+                    │
+                    └─ Indisponible → Escalade (US-09)
+                                          │
+                                   [Administration]
+                                          │
+                                          ├─ Lance une commande (US-13)
+                                          ├─ Propose une alternative (US-13)
+                                          └─ Rejette la demande (US-13)
+```
+
+---
+
+## 📌 Statuts possibles d'une demande
+
+| Statut | Description |
+|--------|-------------|
+| `Soumise` | L'étudiant a créé la demande, en attente de traitement par l'encadrant |
+| `En révision` | L'encadrant consulte la demande |
+| `Validée` | L'encadrant a approuvé la demande |
+| `Rejetée` | L'encadrant ou l'administration a refusé la demande |
+| `Transmise au laboratoire` | La demande validée est envoyée au labo |
+| `Matériel fourni` | Le laboratoire a remis les composants à l'étudiant |
+| `Transmise à l'administration` | Le labo signale un composant indisponible |
+| `Commande lancée` | L'administration a initié un bon de commande |
+| `Alternative proposée` | L'administration propose un composant de remplacement |
+
+---
+
+*Document généré le : avril 2026*  
+*Version : 1.0*
